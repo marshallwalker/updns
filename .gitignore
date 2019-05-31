@@ -1,5 +1,5 @@
 .gradle/
 .idea/
-config.yml
+/config.yml
 gradle/
 out/

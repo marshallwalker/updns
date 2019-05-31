@@ -1,0 +1,18 @@
+cloudflare:
+  api: https://api.cloudflare.com/client/v4/
+  credentials:
+    email:
+    key:
+  zones:
+    - name: example.com
+      records:
+        - example
+checker:
+  url: https://checkip.amazonaws.com/
+# check every x minutes
+  frequency: 5
+
+
+
+
+
