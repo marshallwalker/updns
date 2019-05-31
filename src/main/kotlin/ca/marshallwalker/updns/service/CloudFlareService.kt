@@ -1,14 +1,17 @@
-package ca.marshallwalker.updns
+package ca.marshallwalker.updns.service
 
+import ca.marshallwalker.updns.config.CloudFlareConfig
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
 import io.ktor.client.features.defaultRequest
+import io.ktor.client.request.get
 import io.ktor.client.request.header
+import org.apache.http.HttpResponse
 
 class CloudFlareService(
     private val jsonObjectMapper: ObjectMapper,
-    config: Config.CloudFlareConfig
+    config: CloudFlareConfig
 ) {
     private val client = HttpClient(Apache) {
         defaultRequest {
@@ -17,4 +20,7 @@ class CloudFlareService(
         }
     }
 
+    suspend fun getZone(zoneId: String) {
+        client.get<HttpResponse>()
+    }
 }

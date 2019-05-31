@@ -16,11 +16,14 @@ fun ktor(feature: String) = "io.ktor:$feature:1.2.1"
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
+
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.9")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.9")
 
     implementation(ktor("ktor-client-core"))
     implementation(ktor("ktor-client-apache"))
+
+    implementation("ch.qos.logback:logback-classic:1.3.0-alpha4")
 }
 
 configure<JavaPluginConvention> {
