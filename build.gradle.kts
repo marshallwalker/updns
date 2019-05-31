@@ -22,6 +22,8 @@ dependencies {
 
     implementation(ktor("ktor-client-core"))
     implementation(ktor("ktor-client-apache"))
+    implementation(ktor("ktor-client-json"))
+    implementation(ktor("ktor-client-jackson"))
 
     implementation("ch.qos.logback:logback-classic:1.3.0-alpha4")
 }
