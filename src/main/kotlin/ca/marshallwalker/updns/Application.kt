@@ -4,7 +4,7 @@ import ca.marshallwalker.updns.config.Config
 import ca.marshallwalker.updns.ext.logger
 import ca.marshallwalker.updns.service.AddressCheckService
 import ca.marshallwalker.updns.service.CloudFlareService
-import ca.marshallwalker.updns.task.CheckAddressTask
+import ca.marshallwalker.updns.task.ZoneCheckTask
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
@@ -22,7 +22,7 @@ object Application
 
 fun main() {
     Application.run {
-        logger.info("Starting updns...")
+        logger.info("Starting UpDNS...")
 
         val yamlObjectMapper = ObjectMapper(YAMLFactory()).registerKotlinModule()
         val configFile = File("config.yml")
@@ -41,7 +41,7 @@ fun main() {
             return
         }
 
-        logger.info("Creating HttpClient")
+        logger.info("Creating Apache http client")
         val httpClient = HttpClient(Apache) {
             install(JsonFeature) {
                 serializer = JacksonSerializer {
@@ -50,14 +50,18 @@ fun main() {
             }
         }
 
-        logger.info("Loading config")
+        logger.info("Loading configuration")
         val (cloudflare, checker) = yamlObjectMapper.readValue<Config>(configFile)
+
+        logger.info("Creating CloudFlare Service")
         val cloudFlareService = CloudFlareService(httpClient, cloudflare)
+
+        logger.info("Creating AddressCheck Service")
         val addressCheckService = AddressCheckService(httpClient, checker)
 
-        logger.info("Starting check task")
+        logger.info("Starting zone check task")
         val scheduler = Executors.newSingleThreadScheduledExecutor()
-        val checkAddressTask = CheckAddressTask(addressCheckService, cloudFlareService, cloudflare.zones)
-        scheduler.scheduleAtFixedRate(checkAddressTask, checker.frequency, checker.frequency, TimeUnit.MINUTES)
+        val zoneCheckTask = ZoneCheckTask(addressCheckService, cloudFlareService, cloudflare)
+        scheduler.scheduleAtFixedRate(zoneCheckTask, checker.frequency, checker.frequency, TimeUnit.MINUTES)
     }
 }
